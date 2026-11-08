@@ -5,18 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veeru Quant — NSE Indian Stocks Portfolio (50,000 INR)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-6">
     <div class="max-w-7xl mx-auto space-y-6">
         <!-- Header -->
         <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight text-emerald-400">NSE SWING PORTFOLIO</h1>
-                <p class="text-sm text-slate-400 mt-1">Capital Pool: 50,000 INR | Monthly Rebalancing & Sector Diversification (Max 5k INR/Stock)</p>
+                <h1 class="text-2xl font-bold tracking-tight text-emerald-400">NSE SWING PORTFOLIO & STRATEGY LOGIC</h1>
+                <p class="text-sm text-slate-400 mt-1">Capital Pool: ₹50,000 | Long-Only Cash Swing | Max ₹5,000 per stock | Sector Diversified</p>
             </div>
             <div>
                 <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition">← Back to Main Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Strategy Reasoning & Breakdown Box -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+            <h3 class="text-lg font-bold text-emerald-400">How We Achieved +31.1% Returns (Strategy Breakdown)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
+                <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="font-semibold text-white mb-1">1. Momentum Rotation</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Stocks are ranked monthly based on 3-month and 6-month risk-adjusted strength. Capital rotates strictly into top leaders at each monthly close.</p>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="font-semibold text-white mb-1">2. Strict Risk & Sizing</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Maximum 5,000 INR per stock with a hard 6% trailing stop-loss. No shorting is used; all trades are long-only cash swing equities aligned with Indian market rules.</p>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="font-semibold text-white mb-1">3. Sector Diversification</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Enforces a cap of max 2 stocks per industry sector to prevent over-concentration and protect the portfolio from single-industry shocks.</p>
+                </div>
             </div>
         </div>
 
@@ -35,8 +53,8 @@
                 <p class="text-2xl font-bold text-emerald-400 mt-1">+31.1%</p>
             </div>
             <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Active Risk Limit</span>
-                <p class="text-2xl font-bold text-cyan-400 mt-1">6.0% Trailing SL</p>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Market Rule</span>
+                <p class="text-2xl font-bold text-cyan-400 mt-1">Long-Only Cash</p>
             </div>
         </div>
 
@@ -133,7 +151,6 @@
                             <td class="p-4 text-slate-400">Banking</td>
                             <td class="p-4">₹5,000.00</td>
                             <td class="p-4 text-slate-400">2026-04-01</td>
-                            <td class="p-4">₹1,150.00</td>
                             <td class="p-4 text-slate-400">Current (Active)</td>
                             <td class="p-4">₹1,235.10</td>
                             <td class="p-4 text-emerald-400 font-semibold">+7.4%</td>
