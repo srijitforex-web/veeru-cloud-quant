@@ -1,0 +1,26 @@
+name: Veeru Cloud Quant Bot
+
+on:
+  schedule:
+    - cron: '30 20 * * 1-5' # Runs automatically Mon-Fri at market close (20:30 UTC)
+  workflow_dispatch: # Allows you to trigger it manually anytime
+
+jobs:
+  run-quant-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install pandas numpy yfinance requests arch scikit-learn
+
+      - name: Execute Trading Script
+        run: |
+          python veeru_cloud_bot.py
