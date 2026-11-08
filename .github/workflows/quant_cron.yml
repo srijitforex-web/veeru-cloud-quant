@@ -2,8 +2,8 @@ name: Veeru Cloud Quant Bot
 
 on:
   schedule:
-    - cron: '30 20 * * 1-5' # Runs automatically Mon-Fri at market close (20:30 UTC)
-  workflow_dispatch: # Allows you to trigger it manually anytime
+    - cron: '30 20 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   run-quant-bot:
@@ -22,5 +22,8 @@ jobs:
           pip install pandas numpy yfinance requests arch scikit-learn
 
       - name: Execute Trading Script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python veeru_cloud_bot.py
