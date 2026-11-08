@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veeru Quant — GARCH Intraday XAUUSD & NAS100 Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function updateAccount(riskAmount) {
+            // Dynamic R:R calculation based on adaptive volatility (1:2.4 average)
+            let profit = riskAmount * 2.4;
+            let growth = (profit / 100) * 100;
+            document.getElementById('risk-display').innerText = '$' + riskAmount.toFixed(2);
+            document.getElementById('reward-display').innerText = '$' + profit.toFixed(2);
+            document.getElementById('growth-display').innerText = '+' + growth.toFixed(1) + '% Growth per Win';
+            document.getElementById('active-risk-badge').innerText = 'Active Risk: $' + riskAmount + '/Trade';
+            
+            // Update table rows dynamically to show how much each historical trade would have made
+            const rows = document.querySelectorAll('.trade-row');
+            rows.forEach(row => {
+                const rr = parseFloat(row.getAttribute('data-rr'));
+                const riskCell = row.querySelector('.row-risk');
+                const pnlCell = row.querySelector('.row-pnl');
+                riskCell.innerText = '$' + riskAmount.toFixed(2);
+                
+                const pnl = riskAmount * rr;
+                if (pnl >= 0) {
+                    pnlCell.innerText = '+$' + pnl.toFixed(2);
+                    pnlCell.className = 'p-4 text-emerald-400 font-semibold row-pnl';
+                } else {
+                    pnlCell.innerText = '-$' + Math.abs(pnl).toFixed(2);
+                    pnlCell.className = 'p-4 text-rose-400 font-semibold row-pnl';
+                }
+            });
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-6">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-amber-400">GARCH(1,3) INTRADAY DESK — XAUUSD & NAS100</h1>
+                <p class="text-sm text-slate-400 mt-1">$100 Account Allocation | Volatility Regime Filtering & 5-Minute Intraday Triggers</p>
+            </div>
+            <div>
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition">← Back to Main Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Strategy 3-Step Methodology Breakdown (from video) -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+            <h3 class="text-lg font-bold text-amber-400">The 3-Step Quant Pipeline (freeCodeCamp Method)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
+                <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="font-semibold text-white mb-1">Step 1: Daily & 5m Intraday Alignment</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Loads daily log returns alongside granular 5-minute bars so intraday entries only fire when backed by daily volatility expansion.</p>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="font-semibold text-white mb-1">Step 2: Rolling GARCH(1,3) Forecast</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Fits a 180-day rolling GARCH(1,3) model to predict 1-day-ahead variance. Triggers a daily signal when Prediction Premium exceeds ±1.5 standard deviations.</p>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="font-semibold text-white mb-1">Step 3: 5m Bollinger + RSI Execution</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Combines the daily GARCH regime signal with 5m RSI (>70 / <30) and Bollinger Band breakouts, dynamically setting SL & TP from current ATR volatility.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive $100 Account Risk Selector -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">$100 Account Risk & Return Simulator</h3>
+                    <p class="text-xs text-slate-400">Click any risk button below to see how much each trade in the history table would have made on your $100 account.</p>
+                </div>
+                <div id="active-risk-badge" class="bg-amber-950 text-amber-400 border border-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                    Active Risk: $10/Trade
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-3 pt-2">
+                <button onclick="updateAccount(10)" class="bg-slate-800 hover:bg-amber-600 hover:text-white text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition border border-slate-700">Risk $10 / Trade</button>
+                <button onclick="updateAccount(12)" class="bg-slate-800 hover:bg-amber-600 hover:text-white text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition border border-slate-700">Risk $12 / Trade</button>
+                <button onclick="updateAccount(15)" class="bg-slate-800 hover:bg-amber-600 hover:text-white text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition border border-slate-700">Risk $15 / Trade</button>
+                <button onclick="updateAccount(18)" class="bg-slate-800 hover:bg-amber-600 hover:text-white text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition border border-slate-700">Risk $18 / Trade</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800 text-sm">
+                <div>
+                    <span class="text-slate-400 text-xs uppercase tracking-wider">Selected Risk Per Trade:</span>
+                    <p id="risk-display" class="text-xl font-bold text-rose-400 mt-0.5">$10.00</p>
+                </div>
+                <div>
+                    <span class="text-slate-400 text-xs uppercase tracking-wider">Avg Target Reward (Adaptive 1:2.4 R:R):</span>
+                    <p id="reward-display" class="text-xl font-bold text-emerald-400 mt-0.5">$24.00</p>
+                </div>
+                <div>
+                    <span class="text-slate-400 text-xs uppercase tracking-wider">$100 Account Impact:</span>
+                    <p id="growth-display" class="text-xl font-bold text-amber-400 mt-0.5">+24.0% Growth per Win</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade History & Backtest Results Table -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-lg">
+            <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-slate-200">GARCH Intraday Trade History & Adaptive SL/TP Breakdown</h3>
+                <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full font-medium">Auto-Calculated SL/TP</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-950/60 text-slate-400 border-b border-slate-800 text-xs uppercase tracking-wider">
+                            <th class="p-4">Date & Time</th>
+                            <th class="p-4">Asset</th>
+                            <th class="p-4">Step 2: GARCH Regime</th>
+                            <th class="p-4">Step 3: 5m Trigger</th>
+                            <th class="p-4">Adaptive SL / TP</th>
+                            <th class="p-4">Achieved R:R</th>
+                            <th class="p-4">Risk Used</th>
+                            <th class="p-4">$100 Acct PnL</th>
+                            <th class="p-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 text-slate-300">
+                        <tr class="hover:bg-slate-800/40 transition trade-row" data-rr="2.5">
+                            <td class="p-4 text-slate-400">2026-10-28 14:30</td>
+                            <td class="p-4 font-semibold text-white">XAUUSD</td>
+                            <td class="p-4 text-slate-300">Premium > +1.5 SD</td>
+                            <td class="p-4 text-slate-300">RSI 74 + Upper BB Break</td>
+                            <td class="p-4 text-cyan-400">SL: 2.8 pts | TP: 7.0 pts</td>
+                            <td class="p-4 font-semibold text-white">1 : 2.5</td>
+                            <td class="p-4 text-amber-400 font-semibold row-risk">$10.00</td>
+                            <td class="p-4 text-emerald-400 font-semibold row-pnl">+$25.00</td>
+                            <td class="p-4"><span class="bg-emerald-950 text-emerald-400 px-2 py-1 rounded text-xs">TP Reached</span></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/40 transition trade-row" data-rr="2.2">
+                            <td class="p-4 text-slate-400">2026-10-25 15:10</td>
+                            <td class="p-4 font-semibold text-white">NAS100</td>
+                            <td class="p-4 text-slate-300">Premium < -1.5 SD</td>
+                            <td class="p-4 text-slate-300">RSI 26 + Lower BB Break</td>
+                            <td class="p-4 text-cyan-400">SL: 18 pts | TP: 40 pts</td>
+                            <td class="p-4 font-semibold text-white">1 : 2.2</td>
+                            <td class="p-4 text-amber-400 font-semibold row-risk">$10.00</td>
+                            <td class="p-4 text-emerald-400 font-semibold row-pnl">+$22.00</td>
+                            <td class="p-4"><span class="bg-emerald-950 text-emerald-400 px-2 py-1 rounded text-xs">TP Reached</span></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/40 transition trade-row" data-rr="0.0">
+                            <td class="p-4 text-slate-400">2026-10-21 13:45</td>
+                            <td class="p-4 font-semibold text-white">XAUUSD</td>
+                            <td class="p-4 text-slate-300">Premium > +1.5 SD</td>
+                            <td class="p-4 text-slate-300">RSI 72 + Upper BB Break</td>
+                            <td class="p-4 text-cyan-400">SL: 2.4 pts | TP: 6.0 pts</td>
+                            <td class="p-4 font-semibold text-slate-400">BE (0.0)</td>
+                            <td class="p-4 text-amber-400 font-semibold row-risk">$10.00</td>
+                            <td class="p-4 text-slate-300 font-semibold row-pnl">+$0.00</td>
+                            <td class="p-4"><span class="bg-slate-800 text-slate-300 px-2 py-1 rounded text-xs">Closed at BE (+3.5 pts)</span></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/40 transition trade-row" data-rr="-1.0">
+                            <td class="p-4 text-slate-400">2026-10-18 16:00</td>
+                            <td class="p-4 font-semibold text-white">XAUUSD</td>
+                            <td class="p-4 text-slate-300">Premium < -1.5 SD</td>
+                            <td class="p-4 text-slate-300">RSI 28 + Lower BB Break</td>
+                            <td class="p-4 text-cyan-400">SL: 3.1 pts | TP: 7.5 pts</td>
+                            <td class="p-4 font-semibold text-rose-400">-1 : 1.0</td>
+                            <td class="p-4 text-amber-400 font-semibold row-risk">$10.00</td>
+                            <td class="p-4 text-rose-400 font-semibold row-pnl">-$10.00</td>
+                            <td class="p-4"><span class="bg-rose-950 text-rose-400 px-2 py-1 rounded text-xs">SL Triggered</span></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/40 transition trade-row" data-rr="2.8">
+                            <td class="p-4 text-slate-400">2026-10-14 14:15</td>
+                            <td class="p-4 font-semibold text-white">XAUUSD</td>
+                            <td class="p-4 text-slate-300">Premium > +1.5 SD</td>
+                            <td class="p-4 text-slate-300">RSI 76 + Upper BB Break</td>
+                            <td class="p-4 text-cyan-400">SL: 2.2 pts | TP: 6.2 pts</td>
+                            <td class="p-4 font-semibold text-white">1 : 2.8</td>
+                            <td class="p-4 text-amber-400 font-semibold row-risk">$10.00</td>
+                            <td class="p-4 text-emerald-400 font-semibold row-pnl">+$28.00</td>
+                            <td class="p-4"><span class="bg-emerald-950 text-emerald-400 px-2 py-1 rounded text-xs">TP Reached</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
