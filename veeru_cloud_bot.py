@@ -4,9 +4,9 @@ import pandas as pd
 import yfinance as yf
 from datetime import datetime
 
-# --- CONFIGURATION (Your Credentials) ---
-TELEGRAM_BOT_TOKEN = "9053715457:AAFhYhG5tywpb6i4qb1K5oy9FFBLFI2uiHA"
-TELEGRAM_CHAT_ID = "9053715457"
+# --- CONFIGURATION (Loaded Securely from GitHub Secrets) ---
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 def send_telegram_alert(message):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
