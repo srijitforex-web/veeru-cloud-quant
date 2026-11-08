@@ -8,7 +8,7 @@
     <script>
         function toggleMode(mode) {
             const isCent = mode === 'cent';
-            document.getElementById('mode-badge').innerText = isCent ? 'Display: Cent Units (USC) | Min Size: 0.01 Lot | 30-Unit Spread' : 'Display: USD Equivalent ($) | Min Size: 0.01 Lot';
+            document.getElementById('mode-badge').innerText = isCent ? 'Display: Cent Units (USC) | 100 Trades of 0.01 = 1.00 Lot | 30-Unit Spread' : 'Display: USD Equivalent ($) | 100 Trades of 0.01 = 1.00 Lot';
             document.querySelectorAll('.pnl-val').forEach(el => {
                 const centVal = parseFloat(el.getAttribute('data-cent'));
                 el.innerText = isCent ? (centVal >= 0 ? '+' + centVal + 'c' : centVal + 'c') : (centVal >= 0 ? '+$' + (centVal/100).toFixed(2) : '-$' + (Math.abs(centVal)/100).toFixed(2));
@@ -23,7 +23,7 @@
         <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-emerald-400">HFT / MICRO SCALP DESK — 1-LOT DAILY BE LOOP</h1>
-                <p class="text-sm text-slate-400 mt-1">$50 USD / 5,000 Cent Account (USC) | Minimum 0.01 Lot Sizing | Exactly 100 Trades/Day = 1.00 Lot Volume</p>
+                <p class="text-sm text-slate-400 mt-1">$50 USD / 5,000 Cent Account (USC) | 100 Trades of 0.01 Lots = Exactly 1.00 Standard Lot Daily Volume</p>
             </div>
             <div>
                 <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition">← Back to Main Dashboard</a>
@@ -39,8 +39,8 @@
             </div>
             <div class="bg-slate-900 border border-emerald-500/40 p-5 rounded-xl shadow-lg">
                 <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">Daily Volume Target</span>
-                <p class="text-2xl font-bold text-emerald-400 mt-1">1.00 Lot / Day</p>
-                <span class="text-xs text-slate-400">100x 0.01 Micro-Scalps Enforced</span>
+                <p class="text-2xl font-bold text-emerald-400 mt-1">1.00 Standard Lot</p>
+                <span class="text-xs text-slate-400">100 Separate Trades of 0.01 Lots</span>
             </div>
             <div class="bg-slate-900 border border-amber-500/40 p-5 rounded-xl shadow-lg">
                 <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">Net Daily Profit (After Spread)</span>
@@ -57,7 +57,7 @@
         <!-- Strategy Architecture & 1-Lot Enforcement -->
         <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-emerald-400">High-Frequency 1-Lot Daily Execution Rules ($50 Cent Account)</h3>
+                <h3 class="text-lg font-bold text-emerald-400">High-Frequency 1-Lot Execution Architecture (100 x 0.01 Lots)</h3>
                 <div class="flex gap-2">
                     <button onclick="toggleMode('cent')" class="bg-emerald-600 text-white px-3 py-1 rounded text-xs font-semibold">Cent Mode (USC)</button>
                     <button onclick="toggleMode('usd')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded text-xs font-semibold">USD Mode ($)</button>
@@ -65,16 +65,16 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
                 <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
-                    <h4 class="font-semibold text-white mb-1">1. Minimum 0.01 Lot Sizing</h4>
-                    <p class="text-slate-400 text-xs leading-relaxed">Position sizing is locked to the broker minimum of **0.01 lot**. On a 5,000 Cent account, 0.01 lot equates to 1 cent per pip/point, keeping margin risk minimal.</p>
+                    <h4 class="font-semibold text-white mb-1">1. Why 100 Trades of 0.01?</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Opening 1 full standard lot at once on a $50 account would cause an immediate margin call. Splitting it into **100 individual 0.01 lot scalps** ensures ultra-safe risk distribution.</p>
                 </div>
                 <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
-                    <h4 class="font-semibold text-white mb-1">2. Exactly 100 Trades Daily</h4>
-                    <p class="text-slate-400 text-xs leading-relaxed">To guarantee the **1.00 standard lot daily volume**, the EA executes exactly 100 micro-scalps per session across active XAUUSD liquidity windows.</p>
+                    <h4 class="font-semibold text-white mb-1">2. Accumulating 1.00 Lot Daily</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">By continuously cycling through 100 micro-scalps during active XAUUSD sessions, the EA cleanly logs **1.00 Standard Lot** of total daily volume.</p>
                 </div>
                 <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
-                    <h4 class="font-semibold text-white mb-1">3. 30-Unit Spread Integration</h4>
-                    <p class="text-slate-400 text-xs leading-relaxed">Factor in a 30-unit (0.3 pt) spread cost per trade (-3c per 0.01 lot). Total daily friction is 300c ($3.00), leaving a clean net profit of +500c ($5.00).</p>
+                    <h4 class="font-semibold text-white mb-1">3. 30-Unit Spread Drag</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Each 0.01 lot incurs a 30-unit (0.3 pt) spread cost (-3c). Across 100 trades, total broker friction is 300c ($3.00), resulting in a net profit of +500c ($5.00).</p>
                 </div>
             </div>
         </div>
@@ -83,8 +83,8 @@
         <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-lg">
             <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
                 <div>
-                    <h3 class="font-bold text-lg text-slate-200">100 / 100 Daily Micro-Scalp Execution Stream (1.00 Lot Volume)</h3>
-                    <p class="text-xs text-slate-400" id="mode-badge">Display: Cent Units (USC) | Min Size: 0.01 Lot | 30-Unit Spread</p>
+                    <h3 class="font-bold text-lg text-slate-200">100 / 100 Daily Micro-Scalp Execution Stream (1.00 Lot Total Volume)</h3>
+                    <p class="text-xs text-slate-400" id="mode-badge">Display: Cent Units (USC) | 100 Trades of 0.01 = 1.00 Lot | 30-Unit Spread</p>
                 </div>
                 <div class="text-right">
                     <span class="text-xs text-slate-400">Ending Session Balance:</span>
@@ -148,7 +148,7 @@
                             <td class="p-4 text-cyan-400">0.01 Lot</td>
                             <td class="p-4 text-slate-300">96 Mix Trades (Wins/BE/Loss) + Spread</td>
                             <td class="p-4 text-emerald-400 font-semibold pnl-val" data-cent="504">+504c</td>
-                            <td class="p-4"><span class="bg-emerald-950 text-emerald-400 px-2 py-1 rounded text-xs">Loop Complete</span></td>
+                            <td class="p-4"><span class="bg-emerald-950 text-emerald-400 px-2 py-1 rounded text-xs">Loop Complete (1.00 Lot)</span></td>
                         </tr>
                     </tbody>
                 </table>
